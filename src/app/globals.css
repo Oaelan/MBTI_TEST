@@ -1,22 +1,29 @@
 @import "tailwindcss";
-
-.box {
-  color: white;
-  width: 100px;
-  height: 100px;
-  background-color: red;
-  display: none;
-  opacity: 0;
-  transition: all 0.5s ease-in-out;
+@theme {
+  --color-purple: #cdb4db;
+  --color-light-pink: #ffc8dd;
+  --color-pink: #ffafcc;
+  --color-blue: #a2d2ff;
+  --color-dark-blue: #81a6ff;
 }
 
-.visible {
-  display: block;
-  opacity: 1;
-}
-
-@starting-style {
-  .visible {
-    opacity: 0;
+@layer utilities {
+  .center {
+    @apply flex items-center justify-center;
+  }
+  .btn-primary {
+    @apply text-white px-4 py-2 rounded-md bg-blue-400;
+  }
+  .btn-secondary {
+    @apply text-white px-4 py-2 rounded-md bg-purple;
+  }
+  .btn-tertiary {
+    @apply text-white px-4 py-2 rounded-md bg-light-pink;
+  }
+  .base-container {
+    @apply flex-col gap-10
+    w-full h-full
+    bg-pink/70 rounded-lg
+    outline-pink-700 outline-2;
   }
 }
