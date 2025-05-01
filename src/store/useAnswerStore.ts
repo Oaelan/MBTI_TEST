@@ -1,36 +1,61 @@
+import { MBTIType } from "@/types/mbtiType";
 import { create } from "zustand";
-
-// MBTI 키 타입 정의
-export type MBTIKey = "E" | "I" | "S" | "N" | "T" | "F" | "J" | "P";
-
-// MBTI 점수 타입
-export type MBTIScores = {
-  [key in MBTIKey]?: number;
-};
+type Result = MBTIType[];
 
 interface AnswerStore {
-  MBTI: MBTIScores;
-  addScore: (score: MBTIScores) => void;
+  result: Result;
+  addScore: (type: MBTIType) => void;
+  getResult: () => string | undefined;
 }
+
 const useAnswerStore = create<AnswerStore>((set) => ({
-  MBTI: { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 },
+  // 선택한 결과 저장
+  result: [],
+  // 결과 저장
+  addScore: (type) => set((state) => ({ result: [...state.result, type] })),
+  // MBTI 결과 계산
+  getResult: () => {
+    let mbti = "";
+    const answers = useAnswerStore.getState().result;
+    if (answers) {
+      const first = answers.slice(0, 3);
+      // 배열 M에서 E와 I 개수 세기
+      const countE = first.filter((type) => type === "E").length;
+      const countI = first.filter((type) => type === "I").length;
+      if (countE > countI) {
+        mbti += "E";
+      } else if (countE < countI) {
+        mbti += "I";
+      }
+      const second = answers.slice(3, 6);
+      const countN = second.filter((type) => type === "N").length;
+      const countS = second.filter((type) => type === "S").length;
+      if (countN > countS) {
+        mbti += "N";
+      } else if (countN < countS) {
+        mbti += "S";
+      }
 
-  // 점수 추가 함수
-  addScore: (score) =>
-    set((state) => {
-      // 기존 MBTI 점수 복사
-      const newMBTI = { ...state.MBTI };
-      // score 객체의 각 키 순회
-      Object.keys(score).forEach((key) => {
-        // 해당 키가 MBTI 키인지 확인 (타입 가드)
-        if (key in newMBTI) {
-          // 해당 MBTI 유형의 점수 +1 증가
-          newMBTI[key as MBTIKey] = (newMBTI[key as MBTIKey] || 0) + 1;
-        }
-      });
+      const third = answers.slice(6, 9);
+      const countT = third.filter((type) => type === "T").length;
+      const countF = third.filter((type) => type === "F").length;
+      if (countT > countF) {
+        mbti += "T";
+      } else if (countT < countF) {
+        mbti += "F";
+      }
 
-      return { MBTI: newMBTI };
-    }),
+      const fourth = answers.slice(9, 12);
+      const countJ = fourth.filter((type) => type === "J").length;
+      const countP = fourth.filter((type) => type === "P").length;
+      if (countJ > countP) {
+        mbti += "J";
+      } else if (countJ < countP) {
+        mbti += "P";
+      }
+      return mbti;
+    }
+  },
 }));
 
 export default useAnswerStore;

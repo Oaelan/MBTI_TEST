@@ -1,19 +1,16 @@
-import useAnswerStore from "@/store/useAnswerStore";
 import { useEffect } from "react";
-import { useState } from "react";
+import useAnswerStore from "@/store/useAnswerStore";
 
 export default function Result() {
-  const MBTI = useAnswerStore((state) => state.MBTI);
-  const [result, setResult] = useState<string>("");
+  const result = useAnswerStore((state) => state.getResult());
   useEffect(() => {
-    const result = Object.entries(MBTI)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join(", ");
-    setResult(result);
-  }, [MBTI]);
+    console.log(result);
+  }, [result]);
   return (
-    <div className="w-full h-full center">
-      <h1 className="text-4xl font-bold">{result}</h1>
+    <div className="w-full h-full center flex flex-col gap-4">
+      <h1 className="text-2xl md:text-4xl lg:text-6xl font-bold">
+        당신은 {result} 입니다!
+      </h1>
     </div>
   );
 }
